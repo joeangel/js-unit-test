@@ -5,20 +5,37 @@ import {Profile} from "../src/profile";
 jest.mock("../src/otp");
 jest.mock("../src/profile");
 describe('authenticate account is valid', function () {
-    it('should be valid', () => {
-        let authentication = new Authentication();
-        const expected = true;
+    let authentication = new Authentication();
 
+    beforeEach( function() {
+        authentication = new Authentication();
+    });
+
+    it('should be valid', () => {
+        GivenPassword("91");
+        GivenToken("000000");
+        ShouldBeValid('joey', '91000000');
+    });
+
+    function GivenPassword(password) {
         Profile.mockImplementationOnce(() => {
             return {
                 get_password: () => {
-                    return "91";
+                    return password;
                 }
             };
         });
-        Otp.get_token.mockReturnValueOnce('000000');
-        let result = authentication.is_valid('joey', '91000000');
+    }
+
+    function GivenToken(token) {
+        Otp.get_token.mockReturnValueOnce(token);
+    }
+
+    function ShouldBeValid(account, password) {
+        const expected = true;
+
+        let result = authentication.is_valid(account, password);
 
         expect(result).toBe(expected);
-    });
+    }
 });
