@@ -17,6 +17,12 @@ describe('authenticate account is valid', function () {
         ShouldBeValid('joey', '91000000');
     });
 
+    it('should be invalid', () => {
+        GivenPassword("91");
+        GivenToken("000000");
+        ShouldBeInvalid('joey', 'wrong password');
+    });
+
     function GivenPassword(password) {
         Profile.mockImplementationOnce(() => {
             return {
@@ -32,10 +38,10 @@ describe('authenticate account is valid', function () {
     }
 
     function ShouldBeValid(account, password) {
-        const expected = true;
+        expect(authentication.is_valid(account, password)).toBe(true);
+    }
 
-        let result = authentication.is_valid(account, password);
-
-        expect(result).toBe(expected);
+    function ShouldBeInvalid(account, password) {
+        expect(authentication.is_valid(account, password)).toBe(false);
     }
 });
