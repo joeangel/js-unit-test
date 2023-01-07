@@ -1,25 +1,27 @@
 
 import {Holiday} from "../src/Holyday";
 describe('say hello', function () {
-    it('today is xmas', function () {
-        let holiday = HolidayForTest(12, 25);
-        const expected = "Merry Xmas";
+    let holiday = new Holiday();
 
-        let result = holiday.sayHello();
-
-        expect(result).toBe(expected);
-    });
-    it('today is not xmas', function () {
-        let holiday = HolidayForTest(12,24)
-        const expected = "Today is not Xmas";
-
-        let result = holiday.sayHello();
-
-        expect(result).toBe(expected);
+    beforeEach( function() {
+        holiday = new Holiday();
     });
 
-    function HolidayForTest(month, date) {
-        let holiday = new Holiday();
+    describe('today is xmas', function () {
+        it('12/25 should succeed', function () {
+            GivenToday(12, 25); // hint: xmas is 12/25
+            SayHelloShouldBe("Merry Xmas");
+        });
+    });
+
+    describe('today is not xmas', function () {
+        it('12/24 should fail', function () {
+            GivenToday(12, 24);
+            SayHelloShouldBe("Today is not Xmas");
+        });
+    });
+
+    function GivenToday(month, date) {
         const fakeGetToday = () => {
             let today = new Date();
             today.setMonth(month - 1);
@@ -27,6 +29,10 @@ describe('say hello', function () {
             return today;
         };
         holiday.getToday = fakeGetToday;
-        return holiday;
+    }
+
+    function SayHelloShouldBe(expected) {
+        const result = holiday.sayHello();
+        expect(result).toBe(expected);
     }
 });
